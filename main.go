@@ -2,21 +2,19 @@ package main
 
 import (
 	"fmt"
-
-	"github.com/pkw5240/blockchain/blockchain"
+	"log"
+	"net/http"
 )
 
+const port string = ":4000"
+
+func home(rw http.ResponseWriter, r *http.Request) {
+	fmt.Fprintf(rw, "hello from home!")
+}
+
 func main() {
-	chain := blockchain.GetBlockchain()
-	chain.AddBlock("second")
-	chain.AddBlock("third")
 
-	fmt.Println(chain)
-
-	for _, block := range chain.AllBlocks() {
-		fmt.Printf("data : %s \n", block.Data)
-		fmt.Printf("hash : %x \n", block.Hash)
-		fmt.Printf("PrevHash : %x \n", block.PrevHash)
-	}
-
+	http.HandleFunc("/", home)
+	fmt.Printf("listening on http://localhost%s\n", port)
+	log.Fatal(http.ListenAndServe(port, nil))
 }
